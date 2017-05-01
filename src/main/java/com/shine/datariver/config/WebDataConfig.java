@@ -1,7 +1,6 @@
-package com.websystique.springmvc.configuration;
+package com.shine.datariver.config;
 
 import java.util.Properties;
-
 import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
@@ -18,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({ "com.shine.datariver.config" })
+@ComponentScan({ "com.shine.datariver.model" })
 @PropertySource(value = { "classpath:application.properties" })
 public class WebDataConfig {
 
