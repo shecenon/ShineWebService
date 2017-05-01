@@ -1,0 +1,88 @@
+1. 
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:1.5.3.RELEASE:run (default-cli) on project datariver: Unable to find a suitable main class, please add a 'mainClass' property
+ Add
+@SpringBootApplication
+public class DatariverApplication {
+	public static in main(String[] args) {
+		SpringApplication.run(DatariverApplication.class, args);
+	}
+}
+
+
+2.
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaAutoConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.HibernateException: Access to DialectResolutionInfo cannot be null when 'hibernate.dialect' not set
+
+add following properties in the application.properties, the problem still reported.
+spring.datasource.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+spring.jpa.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+spring.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+
+
+spring.datasource.url=jdbc\:mysql\://localhost\:3306/xe?useUnicode\=true\&characterEncoding\=UTF-8\&autoReconnect\=true\&failOverReadOnly\=false
+
+the actual cause is there are no database named "xe".
+
+
+3.
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Tomcat.class]: Initialization of bean failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSourceInitializer': Invocation of init method failed; nested exception is org.springframework.jdbc.datasource.init.UncategorizedScriptException: Failed to execute database script; nested exception is org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Could not create connection to database server. 
+
+schema.sql or data.sql has syntax error 
+And attention, "CREATE DATABASE  IF NOT EXISTS datarivers;" is meaningless.  For setup a database, it must specified a database, and only
+operate this database. So consider that you can not create a database in schema.sql or data.sql.
+
+mysql> source /home/zen/Work/ShineWebService/src/main/resources/schema.sql
+you should source sql script twice, for some failure occurs on update or drop table when the table has foreign key.
+
+
+Caused by: org.springframework.jdbc.datasource.init.ScriptStatementFailedException: Failed to execute SQL script statement #3 of URL [file:/home/zen/Work/ShineWebService/target/classes/schema.sql]: DROP TABLE IF EXISTS role; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Cannot delete or update a parent row: a foreign key constraint fails
+
+
+4.
+Consider defining a bean of type 'org.springframework.security.core.userdetails.UserDetailsService' 
+
+add @Component for UserDetailsServiceImpl. Or this set in .xml files
+@Component
+public class UserDetailsServiceImpl implements UserDetailsService {
+}
+
+
+For jetty-maven-plugin , xml configuration locates in path webapp/WEB-INF/web.xml
+
+2017-04-30 10:08:04.670  INFO 8084 --- [lication.main()] j.LocalContainerEntityManagerFactoryBean : Building JPA container EntityManagerFactory for persistence unit 'default'
+2017-04-30 10:08:04.690  INFO 8084 --- [lication.main()] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2017-04-30 10:08:04.891  INFO 8084 --- [lication.main()] org.hibernate.Version                    : HHH000412: Hibernate Core {4.3.10.Final}
+2017-04-30 10:08:04.904  INFO 8084 --- [lication.main()] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
+2017-04-30 10:08:04.908  INFO 8084 --- [lication.main()] org.hibernate.cfg.Environment            : HHH000021: Bytecode provider name : javassist
+2017-04-30 10:08:05.433  INFO 8084 --- [lication.main()] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {4.0.5.Final}
+2017-04-30 10:08:06.479  INFO 8084 --- [lication.main()] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+2017-04-30 10:08:06.927  INFO 8084 --- [lication.main()] o.h.h.i.ast.ASTQueryTranslatorFactory    : HHH000397: Using ASTQueryTranslatorFactory
+2017-04-30 10:08:07.647  INFO 8084 --- [lication.main()] org.hibernate.tool.hbm2ddl.SchemaUpdate  : HHH000228: Running hbm2ddl schema update
+2017-04-30 10:08:07.647  INFO 8084 --- [lication.main()] org.hibernate.tool.hbm2ddl.SchemaUpdate  : HHH000102: Fetching database metadata
+2017-04-30 10:08:07.651  INFO 8084 --- [lication.main()] org.hibernate.tool.hbm2ddl.SchemaUpdate  : HHH000396: Updating schema
+2017-04-30 10:08:07.673  INFO 8084 --- [lication.main()] java.sql.DatabaseMetaData                : HHH000262: Table not found: person
+2017-04-30 10:08:07.678  INFO 8084 --- [lication.main()] java.sql.DatabaseMetaData                : HHH000262: Table not found: person
+2017-04-30 10:08:07.684  INFO 8084 --- [lication.main()] java.sql.DatabaseMetaData                : HHH000262: Table not found: person
+2017-04-30 10:08:07.947  INFO 8084 --- [lication.main()] org.hibernate.tool.hbm2ddl.SchemaUpdate  : HHH000232: Schema update complete
+2017-04-30 10:08:08.596  INFO 8084 --- [lication.main()] o.s.jdbc.datasource.init.ScriptUtils     : Executing SQL script from URL [file:/home/zen/Spring/springboot-wyf-sourcecode/ch8_2/src/main/resources/data.sql]
+2017-04-30 10:08:08.709  WARN 8084 --- [lication.main()] ationConfigEmbeddedWebApplicationContext : Exception encountered during context initialization - cancelling refresh attempt
+
+
+
+
+curl -v -H "Content-Type: application/json" -d "{ \"username\": \"danveloper\", \"firstName\": \"Dan\", \"lastName\": \"Woods\", \"createdDate\": \"2014-02-02T00:00:00\" }" http://localhost:8080/user
+
+5.
+/home/zen/.m2/repository/org/hibernate/hibernate-core/5.0.12.Final/hibernate-core-5.0.12.Final.jar
+/home/zen/.m2/repository/org/hibernate/hibernate-core/4.3.10.Final/hibernate-core-4.3.10.Final.jar
+org/hibernate/engine/transaction/spi/TransactionContext.class
+/home/zen/.m2/repository/org/hibernate/hibernate-core/4.3.11.Final/hibernate-core-4.3.11.Final.jar
+org/hibernate/engine/transaction/spi/TransactionContext.class
+
+mvn dependency:tree
++- org.springframework.boot:spring-boot-starter-data-jpa:jar:1.5.3.RELEASE:compile
+|  +- org.hibernate:hibernate-core:jar:5.0.12.Final:compile
+|  +- org.hibernate:hibernate-entitymanager:jar:5.0.12.Final:compile
+mvn dependency:list

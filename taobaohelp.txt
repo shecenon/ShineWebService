@@ -1,0 +1,15 @@
+https://item.taobao.com/item.htm?spm=a1z10.4-c.w5003-12641268955.30.0lDnKZ&id=".$id."&scene=taobao_shop
+https://item.taobao.com/item.htm?spm=a1z10.4-c.w5003-12641268955.30.0lDnKZ&id=521078385887&scene=taobao_shop
+
+http://hws.m.taobao.com/cache/wdetail/5.0/?id=521078385887
+
+
+>>> import requests
+>>> resp = requests.get("http://hws.m.taobao.com/cache/wdetail/5.0/?id=521078385887")
+
+>>> wdetail = resp.json()
+>>> for i in wdetail['data']['itemInfoModel']['picsPath']: print i       <=  main picture urls, which lay in the left side on the top
+
+>>> wdetail['data']['descInfo']['pcDescUrl']           <= the url of detail picture html 
+>>> wdetail['data']['descInfo']['h5DescUrl']           <= the url of large detail picture html 
+>>> wdetail['data']['descInfo']['fullDescUrl']         <= the url will return a JSON data,  its data field is the html, which can be fetch through the above url

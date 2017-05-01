@@ -1,6 +1,7 @@
 package com.shine.datariver.config;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -22,33 +23,37 @@ import com.shine.datariver.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter{//1
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
+    private static final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
+
     @Autowired
     @Qualifier("userDetailsServiceImpl")
     UserDetailsService userDetailsService;
 
-	@Autowired
-	PersistentTokenRepository tokenRepository;
-
+    @Autowired
+    PersistentTokenRepository tokenRepository;
     /*
-	@Bean
-    @Qualifier("userDetailsServiceImpl")
-	UserDetailsService customUserService(){ //2
-		return new UserDetailsServiceImpl(); 
-	}*/
+       @Bean
+       @Qualifier("userDetailsServiceImpl")
+       UserDetailsService customUserService(){ 
+       return new UserDetailsServiceImpl(); 
+       }*/
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        logger.info("xxxxxxxxxxxxxxxxxxxxxxxxxxxx======================================");
+        logger.info("get PasswordEncoder");
         return new BCryptPasswordEncoder();
     }
-	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		//auth.userDetailsService(customUserService()); //3		
-		auth.userDetailsService(userDetailsService); //3		
-	}
-	
-	@Override
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //auth.userDetailsService(customUserService()); //3		
+        auth.userDetailsService(userDetailsService); //3		
+    }
+
+    /*
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().
             //anyRequest().
@@ -56,29 +61,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{//1
             //authenticated() //4
             and().
             formLogin().loginPage("/login").failureUrl("/login?error").usernameParameter("username").passwordParameter("password").and().
-            rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository).tokenValiditySeconds(86400).
-
+            rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository).tokenValiditySeconds(86400).  
             //					permitAll(). //5
             and().csrf().and().
             exceptionHandling().accessDeniedPage("/Access_Denied").and().
             logout().permitAll(); //6
     }
+    */
 
-	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-		authenticationProvider.setUserDetailsService(userDetailsService);
-		authenticationProvider.setPasswordEncoder(passwordEncoder());
-		return authenticationProvider;
-	}
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
 
-	@Bean
-	public PersistentTokenBasedRememberMeServices getPersistentTokenBasedRememberMeServices() {
-		PersistentTokenBasedRememberMeServices tokenBasedservice = new PersistentTokenBasedRememberMeServices(
-				"remember-me", userDetailsService, tokenRepository);
-		return tokenBasedservice;
-	}
-
-
-
+    @Bean
+    public PersistentTokenBasedRememberMeServices getPersistentTokenBasedRememberMeServices() {
+        PersistentTokenBasedRememberMeServices tokenBasedservice = new PersistentTokenBasedRememberMeServices(
+                "remember-me", userDetailsService, tokenRepository);
+        return tokenBasedservice;
+    }
 }

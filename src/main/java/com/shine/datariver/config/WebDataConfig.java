@@ -14,10 +14,16 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({ "com.shine.datariver.model" })
+//@EnableJpaRepositories(repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class)
+//@EnableJpaRepositories("com.shine.datariver.repository")
+@EnableJpaRepositories(entityManagerFactoryRef="entityManagerFactory", 
+                       transactionManagerRef="transactionManager",
+                       basePackages= { "com.shine.datariver.repository" })
+@ComponentScan({ "com.shine.datariver.repository" })
 @PropertySource(value = { "classpath:application.properties" })
 public class WebDataConfig {
 

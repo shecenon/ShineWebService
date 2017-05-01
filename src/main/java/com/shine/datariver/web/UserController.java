@@ -1,5 +1,7 @@
 package com.shine.datariver.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.shine.datariver.model.User;
 import com.shine.datariver.service.SecurityService;
 import com.shine.datariver.service.UserService;
@@ -11,11 +13,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 //import org.springframework.stereotype.Controller;
 //@Controller
 @RestController
 //@EnableAutoConfiguration
 public class UserController {
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class); 
+
     @Autowired
     private UserService userService;
 
@@ -49,6 +54,8 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model, String error, String logout) {
+        logger.info("xxxxxxxxxxxxxxxxxxxxxxxxxxxx======================================");
+        logger.info("request login");
         if (error != null)
             model.addAttribute("error", "Your username and password is invalid.");
 
