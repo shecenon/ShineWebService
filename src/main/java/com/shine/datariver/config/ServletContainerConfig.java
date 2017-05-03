@@ -15,10 +15,6 @@ public class ServletContainerConfig implements EmbeddedServletContainerCustomize
 	public void customize(ConfigurableEmbeddedServletContainer container) {
 		container.setPort(8888);
 		container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/404.html"));
-		container.setSessionTimeout(10,TimeUnit.MINUTES);
-		
+		container.setSessionTimeout(10,TimeUnit.MINUTES);		
 	}
-	
-
-
 }

@@ -14,9 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-//import org.springframework.stereotype.Controller;
-//@Controller
-@RestController
+import org.springframework.stereotype.Controller;
+
+/*
+if use annotation @RestController, method login will return string "login",
+and use annotation @RestController, method login will navigate page "login.jsp"
+*/
+@Controller
+//@RestController
 //@EnableAutoConfiguration
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class); 
