@@ -13,8 +13,8 @@
     </logger>
 
     <logger name="org.springframework">
-        <!-- <level value="info"/> -->
-        <level value="debug"/>
+        <level value="info"/> 
+        <!-- <level value="debug"/> -->
     </logger>
 
     <root>

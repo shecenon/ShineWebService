@@ -46,28 +46,49 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         return new BCryptPasswordEncoder();
     }
 
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         //auth.userDetailsService(customUserService()); //3		
-        auth.userDetailsService(userDetailsService); //3		
+        auth.userDetailsService(userDetailsService); //3	
+	
+//user in memory
+
+auth.inMemoryAuthentication()
+.withUser("hill").password("asd@MBB").roles("ADMIN")
+.and()
+.withUser("zen").password("zen").roles("USER")
+;
+
     }
 
-    /*
+    
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().
-            //anyRequest().
-            antMatchers("/", "/welcome").access("hasRole('ROLE_USER') or hasRole('ADMIN') or hasRole('DBA')").
-            //authenticated() //4
-            and().
-            formLogin().loginPage("/login").failureUrl("/login?error").usernameParameter("username").passwordParameter("password").and().
-            rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository).tokenValiditySeconds(86400).  
-            //					permitAll(). //5
-            and().csrf().and().
-            exceptionHandling().accessDeniedPage("/Access_Denied").and().
-            logout().permitAll(); //6
+        http.authorizeRequests()
+            .antMatchers("/", "/welcome").access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
+            .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+            .anyRequest().authenticated()
+            .and()
+            .formLogin().loginPage("/login").failureUrl("/login?error").defaultSuccessUrl("/index").usernameParameter("username").passwordParameter("password").permitAll()
+            .and()
+            .rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository).tokenValiditySeconds(86400)
+            //.and()
+            //.csrf()
+            //.and()
+            //.exceptionHandling().accessDeniedPage("/Access_Denied")
+            .and()
+            .logout().logoutUrl("/logout").logoutSuccessUrl("/welcome").permitAll()
+            ;
     }
-    */
+
+//@Override
+//public void configure(WebSecurity web) throws Exception {
+//super.configure(web);
+//}
+   
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {

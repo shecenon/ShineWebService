@@ -75,6 +75,10 @@ For jetty-maven-plugin , xml configuration locates in path webapp/WEB-INF/web.xm
 curl -v -H "Content-Type: application/json" -d "{ \"username\": \"danveloper\", \"firstName\": \"Dan\", \"lastName\": \"Woods\", \"createdDate\": \"2014-02-02T00:00:00\" }" http://localhost:8080/user
 
 5.
+Could not open Hibernate Session for transaction; nested exception is java.lang.NoClassDefFoundError: org/hibernate/engine/transaction/spi/TransactionContext
+导入的hibernate的包是5.0的， org/hibernate/engine/transaction/spi/TransactionContext这个类已经移除了
+
+
 /home/zen/.m2/repository/org/hibernate/hibernate-core/5.0.12.Final/hibernate-core-5.0.12.Final.jar
 /home/zen/.m2/repository/org/hibernate/hibernate-core/4.3.10.Final/hibernate-core-4.3.10.Final.jar
 org/hibernate/engine/transaction/spi/TransactionContext.class
@@ -86,3 +90,19 @@ mvn dependency:tree
 |  +- org.hibernate:hibernate-core:jar:5.0.12.Final:compile
 |  +- org.hibernate:hibernate-entitymanager:jar:5.0.12.Final:compile
 mvn dependency:list
+
+
+解决方案： 把spring-boot 从1.5.3.Release 降到 1.3.0.Release。
+
+
+6.
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'springSecurityFilterChain' defined in class path resource [org/springframework/security/config/annotation/web/configuration/WebSecurityConfiguration.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [javax.servlet.Filter]: Factory method 'springSecurityFilterChain' threw exception; nested exception is java.lang.IllegalArgumentException: ROLE_ADMIN cannot start with ROLE_ (it is automatically added)
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'springSecurityFilterChain' defined in class path resource [org/springframework/security/config/annotation/web/configuration/WebSecurityConfiguration.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [javax.servlet.Filter]: Factory method 'springSecurityFilterChain' threw exception; nested exception is org.springframework.security.config.annotation.AlreadyBuiltException: This object has already been built
+
+the right name:
+antMatchers("/", "/welcome").access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
+the error role, and cause the above error:
+.antMatchers("/", "/welcome").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')")
+auth.inMemoryAuthentication()
+.withUser("hill").password("asd@MBB").roles("ROLE_ADMIN");
