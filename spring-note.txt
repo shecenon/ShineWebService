@@ -150,5 +150,37 @@ java.sql.SQLException: ORA-01045: user BOOT lacks CREATE SESSION privilege; logo
 
 7.
 @Resetcontrol 用于返回对象，会自动格式化为JSON
-@Control会返回jsp页面
+@Control会返回jsp, html页面
 
+
+8.
+如果jsp页面没有被解析，那么需要申明库jstl 以及 tomcat-embed-jasper，
+jstl不使用会报错，但是tomcat-embed-jasper不使用，不会报错，但是jsp不会解析，只
+是原文返回给浏览器：
+
+        <!--配置jsp jstl的支持-->  
+        <dependency>  
+            <groupId>javax.servlet</groupId>  
+            <artifactId>jstl</artifactId>  
+			<version>${jstl.version}</version>
+        </dependency>  
+  
+        <!--对jsp的支持-->  
+        <dependency>  
+            <groupId>org.apache.tomcat.embed</groupId>  
+            <artifactId>tomcat-embed-jasper</artifactId>  
+        </dependency>  
+
+
+        <!--添加对tomcat的支持-->  
+        <dependency>  
+           <groupId>org.springframework.boot</groupId>  
+           <artifactId>spring-boot-starter-tomcat</artifactId>  
+            <scope>provided</scope>  
+        </dependency>  
+		
+        <!--配置servlet-->  
+        <dependency>  
+            <groupId>javax.servlet</groupId>  
+            <artifactId>javax.servlet-api</artifactId>  
+        </dependency>  

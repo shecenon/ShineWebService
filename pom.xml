@@ -51,13 +51,19 @@
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
         -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>${jstl.version}</version>
-		</dependency>
-		
 
+        <!--配置jsp jstl的支持-->  
+        <dependency>  
+            <groupId>javax.servlet</groupId>  
+            <artifactId>jstl</artifactId>  
+			<version>${jstl.version}</version>
+        </dependency>  
+  
+        <!--对jsp的支持-->  
+        <dependency>  
+            <groupId>org.apache.tomcat.embed</groupId>  
+            <artifactId>tomcat-embed-jasper</artifactId>  
+        </dependency>  
 
 		<!-- Spring and Transactions -->
 		<dependency>
