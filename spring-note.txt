@@ -145,13 +145,9 @@ java.sql.SQLException: ORA-01045: user BOOT lacks CREATE SESSION privilege; logo
 	at oracle.jdbc.driver.T4CDriverExtension.getConnection(T4CDriverExtension.java:32)
 	at oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:528)
 
-
-
-
 7.
 @Resetcontrol 用于返回对象，会自动格式化为JSON
 @Control会返回jsp, html页面
-
 
 8.
 如果jsp页面没有被解析，那么需要申明库jstl 以及 tomcat-embed-jasper，
@@ -171,16 +167,17 @@ jstl不使用会报错，但是tomcat-embed-jasper不使用，不会报错，但
             <artifactId>tomcat-embed-jasper</artifactId>  
         </dependency>  
 
+org.springframework.boot:spring-boot-starter-tomcat, javax.servlet:javax.servlet-api
+ 使用下面命令查看包依赖：
+ mvn dependency:tree 
+ mvn dependency:list
 
-        <!--添加对tomcat的支持-->  
-        <dependency>  
-           <groupId>org.springframework.boot</groupId>  
-           <artifactId>spring-boot-starter-tomcat</artifactId>  
-            <scope>provided</scope>  
-        </dependency>  
-		
-        <!--配置servlet-->  
-        <dependency>  
-            <groupId>javax.servlet</groupId>  
-            <artifactId>javax.servlet-api</artifactId>  
-        </dependency>  
+ 9.
+jsp网页可以解析了，但是layout还是不对。这是由于.css,  .js等静态的文件，浏览器
+获取不到。
+  a）资源的放置路径。
+  b）WebMvcConfigurerAdapter.addResourceHandlers 配置映射。
+  c) WebSecurityConfigurerAdapter.configure(HttpSecurity http) 权限配置。
+  d) jsp或网页中，资源引用的路径是否于a)中对应的。
+  e) 使用以下命令查看：
+    jar tf /home/zen/work/ShineWebService/target/datariver-0.0.1-SNAPSHOT.jar

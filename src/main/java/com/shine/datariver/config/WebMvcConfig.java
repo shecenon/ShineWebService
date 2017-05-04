@@ -50,8 +50,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //registry.addResourceHandler("/static/**").addResourceLocations("/static/");
         registry.addResourceHandler("/WEB-INF/**").addResourceLocations("classpath:/WEB-INF/");
-registry.addResourceHandler("/static/**").addResourceLocations(
-				"classpath:/static/");
+        registry.addResourceHandler("/resources/**").addResourceLocations("classpath:/resources/");
     }
 
 }
