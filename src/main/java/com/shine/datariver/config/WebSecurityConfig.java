@@ -73,7 +73,7 @@ auth.inMemoryAuthentication()
             //.antMatchers("/resources/**").permitAll()
             //.anyRequest().authenticated()
             .and()
-            .formLogin().loginPage("/login").failureUrl("/login?error").defaultSuccessUrl("/index").usernameParameter("username").passwordParameter("password").permitAll()
+            .formLogin().loginPage("/login").failureUrl("/login?error=100").defaultSuccessUrl("/welcome").usernameParameter("username").passwordParameter("password").permitAll()
             .and()
             .rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository).tokenValiditySeconds(86400)
             //.and()
@@ -81,7 +81,7 @@ auth.inMemoryAuthentication()
             //.and()
             //.exceptionHandling().accessDeniedPage("/Access_Denied")
             .and()
-            .logout().logoutUrl("/logout").logoutSuccessUrl("/welcome").permitAll()
+            .logout().logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll()
             ;
     }
 

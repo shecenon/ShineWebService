@@ -3,6 +3,8 @@ package com.shine.datariver.service;
 import com.shine.datariver.model.User;
 import com.shine.datariver.repository.RoleRepository;
 import com.shine.datariver.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +14,7 @@ import java.util.HashSet;
 
 @Service
 public class UserServiceImpl implements UserService {
+    static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -32,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
+        logger.info("find user " + username);
         return userRepository.findByUsername(username);
     }
 }
