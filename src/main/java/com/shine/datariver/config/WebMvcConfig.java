@@ -7,6 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -23,7 +24,6 @@ import org.springframework.web.servlet.view.JstlView;
 @ComponentScan(basePackages = "com.shine.datariver")
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(WebMvcConfig.class); 
-
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -52,5 +52,11 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/WEB-INF/**").addResourceLocations("classpath:/WEB-INF/");
         registry.addResourceHandler("/resources/**").addResourceLocations("classpath:/resources/");
     }
-
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        //messageSource.setBasename("/WEB-INF/classes/messages");
+        messageSource.setBasename("classpath:/validation");
+        return messageSource;
+    }
 }

@@ -181,3 +181,12 @@ jsp网页可以解析了，但是layout还是不对。这是由于.css,  .js等�
   d) jsp或网页中，资源引用的路径是否于a)中对应的。
   e) 使用以下命令查看：
     jar tf /home/zen/work/ShineWebService/target/datariver-0.0.1-SNAPSHOT.jar
+
+10.
+    mvn dependency:sources
+
+
+11. 
+org.springframework.context.NoSuchMessageException: No message found under code 'Size.userForm.username.userForm.username' for locale 'en_US'.
+in WebMvcConfigurerAdapter derived class set MessageSource
+
